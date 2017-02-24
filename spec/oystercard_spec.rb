@@ -32,6 +32,21 @@ describe Oystercard do
     end
   end
 
+  context 'raising a penalty fare' do
+
+  it 'charges penalty fare if not tapped in' do
+    oystercard.touch_out(Station.new "Aldgate")
+    expect{ oystercard.fare_checker }.to change { oystercard.balance }.by -Oystercard::PENALTY_FARE
+  end
+
+  it 'charges penalty fare if tapped in twice' do
+    oystercard.top_up(10)
+    oystercard.touch_in(Station.new "Aldgate")
+    expect{ oystercard.fare_checker }.to change { oystercard.balance }.by -Oystercard::PENALTY_FARE
+  end
+
+end
+
   describe "touching in and out" do
 
     before :each do
@@ -52,16 +67,5 @@ describe Oystercard do
     expect{oystercard.touch_in(entry_station)}.to raise_error "Your balance is less than #{Oystercard::MIN_FARE}!"
   end
 
-  context 'raising a penalty fare' do
 
-  it 'charges penalty fare if not tapped in' do
-    journey.end_journey(Station.new "Aldgate")
-    expect(oystercard.fare_checker).to eq oystercard.penalty_fare
-
-  it 'charges penalty fare if tapped in twice' do
-    journey.start_journey(Station.new "Aldgate")
-    expect(journey.start_journey(Station.new "Aldgate")).to eq oystercard.penalty_fare
-  end
-end
-end
 end
