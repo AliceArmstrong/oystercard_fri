@@ -5,7 +5,7 @@ describe Journey do
   subject(:journey) { described_class.new }
 
     it 'checks if journey is complete' do
-      expect(journey.complete?).to eq true
+      expect(journey.journey_complete?).to eq true
     end
 
     it 'should have an empty list of journeys by default' do
@@ -50,6 +50,6 @@ end
     expect(journey.start_journey(Station.new "Aldgate")).to eq journey.penalty_fare
   end
 
-  it 'checks to see if regular fare '
-end
+  # it 'checks to see if regular fare '
+  end
 end
