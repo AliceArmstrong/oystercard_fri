@@ -1,5 +1,6 @@
 require_relative 'station'
 require_relative 'journey'
+require_relative 'journeylog'
 
 class Oystercard
 
@@ -11,7 +12,7 @@ class Oystercard
 
   def initialize
     @balance = 0
-    @journey = Journey.new
+    @journeylog = JourneyLog.new
   end
 
   def top_up(amount)
@@ -21,20 +22,20 @@ class Oystercard
 
   def touch_in(station)
     raise "Your balance is less than #{MIN_FARE}!" if @balance < MIN_FARE
-      if !@journey.journey_complete?
+      if !@journeylog.journey_complete?
         penalty_fare
       end
-    @journey.start_journey(station)
+    @journeylog.start_journey(station)
   end
 
   def touch_out(station)
-    @journey.end_journey(station)
+    @journeylog.end_journey(station)
     fare_checker
-    @journey.reset_journey
+    @journeylog.reset_journey
   end
 
   def fare_checker
-      if @journey.invalid_journey?
+      if @journeylog.invalid_journey?
         penality_fare
       else
         min_fare

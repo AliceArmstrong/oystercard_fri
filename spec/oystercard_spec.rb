@@ -6,7 +6,7 @@ describe Oystercard do
 
   let(:entry_station) { double :station }
   let(:exit_station) { double :station }
-  let(:journey) { { "entry" => entry_station, "exit" => exit_station} }
+  let(:journey_log) { { "entry" => entry_station, "exit" => exit_station} }
 
   describe "initialization" do
     it "should has a balance of 0" do
@@ -35,13 +35,13 @@ describe Oystercard do
   context 'raising a penalty fare' do
 
   it 'charges penalty fare if not tapped in' do
-    oystercard.touch_out(Station.new "Aldgate")
+    oystercard.touch_out(Station.new "Aldgate", 1)
     expect{ oystercard.fare_checker }.to change { oystercard.balance }.by -Oystercard::PENALTY_FARE
   end
 
   it 'charges penalty fare if tapped in twice' do
     oystercard.top_up(10)
-    oystercard.touch_in(Station.new "Aldgate")
+    oystercard.touch_in(Station.new "Aldgate", 1)
     expect{ oystercard.fare_checker }.to change { oystercard.balance }.by -Oystercard::PENALTY_FARE
   end
 
@@ -51,13 +51,13 @@ end
 
     before :each do
       oystercard.top_up(10)
-      oystercard.touch_in(Station.new 'Nottinghill')
+      oystercard.touch_in(Station.new 'Nottinghill Gate', 3)
     end
 
   describe "#touch_out" do
 
     it "should deduct the fee" do
-      expect{oystercard.touch_out(Station.new ('Aldgate'))}.to change {oystercard.balance}.by -Oystercard::MIN_FARE
+      expect{oystercard.touch_out(Station.new 'Aldgate', 1)}.to change {oystercard.balance}.by -Oystercard::MIN_FARE
     end
   end
 
