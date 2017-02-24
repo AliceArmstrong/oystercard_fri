@@ -11,6 +11,10 @@ attr_reader :entry_station, :exit_station, :journeys, :current_journey
     @current_journey = current_journey
   end
 
+  def show_journey_history
+    p @journeys
+  end
+
   def start_journey(station)
     @entry_station = station
   end
