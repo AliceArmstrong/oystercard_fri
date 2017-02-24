@@ -11,7 +11,7 @@ class Oystercard
 
   def initialize
     @balance = 0
-    @journey_one = Journey.new
+    @journey = Journey.new
   end
 
   def top_up(amount)
@@ -21,12 +21,24 @@ class Oystercard
 
   def touch_in(station)
     raise "Your balance is less than #{MIN_FARE}!" if @balance < MIN_FARE
-    @journey_one.start_journey(station)
+      if !@journey.journey_complete?
+        penalty_fare #moving to oystercard
+      end
+    @journey.start_journey(station)
   end
 
   def touch_out(station)
-    # deduct(MIN_FARE)
-    @journey_one.end_journey(station)
+    @journey.end_journey(station)
+    fare_checker
+    @journey.reset
+  end
+
+  def fare_checker #move to oystercard
+      if @journey.invalid_journey?
+        penality_fare
+      else
+        min_fare #will want this to call in oystercard
+      end
   end
 
   def penality_fare
